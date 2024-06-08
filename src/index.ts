@@ -10,7 +10,7 @@ const app: Express = express();
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("It works");
+  res.send("Welcome to userprisma api v1.0.0");
 });
 
 app.use("/api", rootRouter);
