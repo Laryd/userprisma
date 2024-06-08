@@ -29,9 +29,7 @@ const authMiddleware = async (
       next(new UnauthorizedException("Unauthorized", ErrorCode.UNAUTHORIZED));
     }
     // attach user to the current request object
-    console.log(user)
     req.user = user;
-    console.log(req.user)
     next();
   } catch (error) {
     next(new UnauthorizedException("Unauthorized", ErrorCode.UNAUTHORIZED));
