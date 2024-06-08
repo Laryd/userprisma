@@ -21,5 +21,7 @@ export const prismaClient = new PrismaClient({
 })
 app.use(errorMiddleware);
 
+export default app;
+
 
 app.listen(PORT, () => console.log("Server running on port", PORT));
