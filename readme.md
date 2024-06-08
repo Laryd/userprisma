@@ -3,6 +3,7 @@
 Welcome to the documentation for the UserPrisma API. This RESTful API is built using Node.js and interacts with a PostgreSQL database. It provides endpoints for user authentication, user management, and user-related operations.
 
 ## Getting Started
+   Live endpoint: https://userprisma.onrender.com
 
 To get started with the UserPrisma API, follow these steps:
 
@@ -31,6 +32,7 @@ To get started with the UserPrisma API, follow these steps:
    DATABASE_URL=your_database_connection_string
    JWT_SECRET=your_jwt_secret_key
    ```
+   
 
 4. **Run Migrations**: Run Prisma migrations to create the necessary database schema.
 
