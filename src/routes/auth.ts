@@ -7,7 +7,6 @@ import authMiddleware, { isAdmin } from "../middlewares/auth";
 const authRoutes:Router = Router()
 
 authRoutes.post('/login', errorHandler(login))
-authRoutes.post('/login', errorHandler(login))
 
 authRoutes.post("/register", errorHandler(register))
 
