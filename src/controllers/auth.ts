@@ -20,16 +20,23 @@ export const login = async (
     where: { email },
   });
 
-  if (!user) {
-    throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-  }
+    if (!user) {
+      return next(
+        new BadRequestsException(
+          "User does not exist",
+          ErrorCode.USER_NOT_FOUND
+        )
+      );
+    }
 
-  if (!compareSync(password, user.password)) {
-    throw new BadRequestsException(
-      "Incorrect password",
-      ErrorCode.INCORRECT_PASSWORD
-    );
-  }
+    if (!compareSync(password, user.password)) {
+      return next(
+        new BadRequestsException(
+          "Incorrect password",
+          ErrorCode.INCORRECT_PASSWORD
+        )
+      );
+    }
 
   const token = jwt.sign(
     {
@@ -53,12 +60,14 @@ export const register = async (
     where: { email },
   });
 
-  if (user) {
-    throw new BadRequestsException(
-      "User already exists",
-      ErrorCode.USER_ALREADY_EXISTS
-    );
-  }
+    if (user) {
+      return next(
+        new BadRequestsException(
+          "User already exists",
+          ErrorCode.USER_ALREADY_EXISTS
+        )
+      );
+    }
 
   user = await prismaClient.user.create({
     data: {
@@ -70,110 +79,8 @@ export const register = async (
     },
   });
 
-  res.json(user);
-};
-
-// /me => return logged in user
-export const me = async (
-  req: Request,
-  res: Response,
-) => {
-  console.log(req.user);
-  res.json(req.user);
-  
-};
-
-// Retrieve all users
-export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
-  const users = await prismaClient.user.findMany();
-  res.json(users);
-};
-
-// Create a new user
-export const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, name, phone, isAdmin } = req.body;
-
-  let user = await prismaClient.user.findFirst({
-    where: { email },
-  });
-
-  if (user) {
-    throw new BadRequestsException(
-      "User already exists",
-      ErrorCode.USER_ALREADY_EXISTS
-    );
+    res.json(user);
+  } catch (error) {
+    next(error);
   }
-
-  user = await prismaClient.user.create({
-    data: {
-      name,
-      email,
-      password: hashSync(password, 10),
-      phone,
-      isAdmin: !!isAdmin,
-    },
-  });
-
-  res.json(user);
-}
-
-// Retrieve a specific user by ID
-export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-
-  const user = await prismaClient.user.findUnique({
-    where: { id: Number(id) },
-  });
-
-  if (!user) {
-    throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-  }
-
-  res.json(user);
-};
-
-// Update an existing user
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-  const { email, password, name, phone, isAdmin } = req.body;
-
-  let user = await prismaClient.user.findUnique({
-    where: { id: Number(id) },
-  });
-
-  if (!user) {
-    throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-  }
-
-  user = await prismaClient.user.update({
-    where: { id: Number(id) },
-    data: {
-      name,
-      email,
-      password: password ? hashSync(password, 10) : user.password,
-      phone,
-      isAdmin: isAdmin !== undefined ? !!isAdmin : user.isAdmin,
-    },
-  });
-
-  res.json(user);
-};
-
-// Delete a user from the database
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-
-  const user = await prismaClient.user.findUnique({
-    where: { id: Number(id) },
-  });
-
-  if (!user) {
-    throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-  }
-
-  await prismaClient.user.delete({
-    where: { id: Number(id) },
-  });
-
-  res.json({ message: "User deleted successfully" });
 };
