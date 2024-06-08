@@ -5,5 +5,4 @@ export const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   phone: z.string(),
-  isAdmin: z.boolean()
 });
