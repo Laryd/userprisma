@@ -15,7 +15,6 @@ describe("Authentication Endpoints", () => {
       phone: "1234567890",
     });
     userId = res.body.id;
-    console.log(userId, "is the user id");
   });
   it("should register a new user", async () => {
     const resRegister = await request(app).post("/api/auth/register").send({
@@ -36,8 +35,7 @@ describe("Authentication Endpoints", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("token");
-    token = res.body.token;
-    console.log(res.body); // Store token for authenticated requests
+    token = res.body.token; // Store token for authenticated requests
   });
 
   it("should return the logged in user profile", async () => {
